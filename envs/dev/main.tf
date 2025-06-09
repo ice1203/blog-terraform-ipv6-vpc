@@ -40,7 +40,7 @@ module "main_vpc" {
   private_subnet_enable_dns64 = true
 
   # VPCフローログの設定
-  enable_flow_log                      = false
+  enable_flow_log                      = true
   flow_log_max_aggregation_interval    = 60
   create_flow_log_cloudwatch_iam_role  = true
   create_flow_log_cloudwatch_log_group = true
@@ -64,10 +64,28 @@ module "ec2" {
     inbound_rules = {
     }
     outbound_rules = {
-      all = {
-        from_port   = -1
-        to_port     = -1
-        ip_protocol = "-1"
+      https = {
+        from_port   = 443
+        to_port     = 443
+        ip_protocol = "tcp"
+        cidr_ipv6   = "::/0"
+      }
+      dns_tcp = {
+        from_port   = 53
+        to_port     = 53
+        ip_protocol = "tcp"
+        cidr_ipv6   = "::/0"
+      }
+      dns_udp = {
+        from_port   = 53
+        to_port     = 53
+        ip_protocol = "udp"
+        cidr_ipv6   = "::/0"
+      }
+      ntp = {
+        from_port   = 123
+        to_port     = 123
+        ip_protocol = "udp"
         cidr_ipv6   = "::/0"
       }
     }
